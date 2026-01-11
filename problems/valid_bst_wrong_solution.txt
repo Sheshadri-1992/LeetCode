@@ -1,0 +1,66 @@
+# Definition for a binary tree node.
+# https://leetcode.com/problems/validate-binary-search-tree/
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+
+    def verifyTree(self, root, parentVal, leftTree) -> bool:
+        print(root, parentVal, leftTree)
+        if root == None:
+            return True
+
+        if root.left == None and root.right == None:
+            if leftTree:
+                if root.val >= parentVal:
+                    return False
+            else:
+                if root.val <= parentVal:
+                    return False
+            return True
+
+        if root.left and root.right:
+            if (root.left.val >= root.val) or (root.right.val <= root.val):
+                return False
+
+        if root.left and root.right == None:
+            if root.left.val >= root.val:
+                return False
+        
+        if root.left == None and root.right:
+            if root.right.val <= root.val:
+                return False
+            
+        if leftTree:
+            if root.right and root.right.val >= parentVal:
+                return False
+        else:
+            if root.left and root.left.val <= parentVal:
+                return False
+        
+        leftFlag = self.verifyTree(root.left, root.val, True)
+        rightFlag = self.verifyTree(root.right, root.val, False)
+
+        print("inside left flag, right flag ",leftFlag, rightFlag)
+
+        return (leftFlag and rightFlag)
+
+        
+
+
+    def isValidBST(self, root: Optional[TreeNode]) -> bool:
+        
+        if root == None:
+            return True
+
+        if root.left == None and root.right == None:
+            return True
+        
+        leftTree = self.verifyTree(root.left, root.val, True)
+        print("Left", leftTree)
+        rightTree = self.verifyTree(root.right, root.val, False)
+        print(rightTree)
+
+        return ( leftTree and rightTree )
